@@ -79,11 +79,21 @@
             cursor: pointer;
             width: 100%;
         }
+        .btn-kembali {
+            background: #e74c3c; /* Warna merah untuk tombol kembali */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     <header class="navbar">
-        ⬅ Checkout
+         Checkout
     </header>
 
     <div class="container">
@@ -125,6 +135,7 @@
             <label><input type="radio" name="metode"> Kartu Kredit/Debit</label><br>
             <label><input type="radio" name="metode"> COD</label><br>
             <button class="btn-bayar" onclick="bayarSekarang()">Bayar Sekarang</button>
+            <button class="btn-kembali" onclick="kembaliKeKeranjang()">Kembali ke Keranjang</button>
         </div>
     </div>
 
@@ -165,10 +176,13 @@
         });
 
         function bayarSekarang() {
-            alert("Transaksi berhasil! Terima kasih telah berbelanja di HiTekno.");
             localStorage.removeItem('keranjang');
             localStorage.removeItem('checkout');
-            window.location.href = 'index.html';
+            window.location.href = 'sukses.html'; // Arahkan ke halaman sukses
+        }
+
+        function kembaliKeKeranjang() {
+            window.location.href = 'keranjang.html'; // Arahkan kembali ke halaman keranjang
         }
     </script>
 
