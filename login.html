@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - HiTekno Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">HiTekno</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="kategori.html">Kategori</a>
+            <a href="keranjang.html">Keranjang <span id="keranjang-count" style="background:red; color:white; padding:2px 8px; border-radius:50%; font-size:0.8em;">0</span></a>
+            <a href="chat.html">Chat</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+<section class="hero">
+    <h1>Login</h1>
+    <p>Silakan masuk untuk melanjutkan ke HiTekno Store.</p>
+
+    <form class="login-form" action="#" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Masuk</button>
+
+        <p>
+            Belum punya akun? <a href="register.html">Daftar di sini</a>
+        </p>
+    </form>
+</section>
+
+    <footer class="footer">
+        <p>&copy; 2025 HiTekno. All rights reserved.</p>
+    </footer>
+
+<script>
+function updateKeranjangCount() {
+    const data = JSON.parse(localStorage.getItem('keranjang')) || [];
+    const count = data.reduce((acc, item) => acc + (item.jumlah || 1), 0);
+    const badge = document.getElementById('keranjang-count');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+    }
+}
+document.addEventListener('DOMContentLoaded', updateKeranjangCount);
+</script>
+
+</body>
+</html>

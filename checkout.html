@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+        .navbar {
+            background-color: #3498db;
+            color: white;
+            padding: 1em;
+            font-size: 1.2em;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 2em;
+            flex-wrap: wrap;
+        }
+        .form-alamat, .ringkasan, .pembayaran {
+            background: #f3f3f3;
+            padding: 1em;
+            border-radius: 10px;
+            margin: 1em;
+            width: 300px;
+            box-sizing: border-box;
+        }
+        .form-alamat h3, .ringkasan h3, .pembayaran h3 {
+            background: #2980b9;
+            color: white;
+            padding: 0.5em;
+            border-radius: 5px 5px 0 0;
+            margin: -1em -1em 1em -1em;
+        }
+        .form-alamat form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        .row input {
+            flex: 1;
+        }
+        .ringkasan .produk {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .ringkasan .total {
+            font-weight: bold;
+            border-top: 1px solid #ccc;
+            margin-top: 10px;
+            padding-top: 5px;
+        }
+        .btn-bayar {
+            background: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        ⬅ Checkout
+    </header>
+
+    <div class="container">
+        <div class="form-alamat">
+            <h3>Alamat Pengiriman</h3>
+            <form>
+                <input type="text" placeholder="Nama Lengkap">
+                <input type="text" placeholder="Nomor Telepon">
+                <input type="text" placeholder="Alamat">
+                <div class="row">
+                    <input type="text" placeholder="Provinsi">
+                    <input type="text" placeholder="Kabupaten">
+                </div>
+                <input type="text" placeholder="Kode Pos">
+            </form>
+        </div>
+
+        <div class="ringkasan">
+            <h3>Ringkasan Pesanan</h3>
+            <div id="daftar-produk"></div>
+            <div class="produk">
+                <span>Subtotal</span>
+                <span id="subtotal">Rp 0</span>
+            </div>
+            <div class="produk">
+                <span>Ongkir</span>
+                <span id="ongkir">Rp 0</span>
+            </div>
+            <div class="produk total">
+                <span>Total</span>
+                <span id="total">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="pembayaran">
+            <h3>Metode Pembayaran</h3>
+            <label><input type="radio" name="metode" checked> Transfer Bank (Mandiri, BCA, dll)</label><br>
+            <label><input type="radio" name="metode"> E-Wallet (OVO, Dana, Gopay, dll)</label><br>
+            <label><input type="radio" name="metode"> Kartu Kredit/Debit</label><br>
+            <label><input type="radio" name="metode"> COD</label><br>
+            <button class="btn-bayar" onclick="bayarSekarang()">Bayar Sekarang</button>
+        </div>
+    </div>
+
+    <script>
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const produk = JSON.parse(localStorage.getItem('checkout')) || [];
+            let subtotal = 0;
+
+            const daftar = document.getElementById('daftar-produk');
+
+            produk.forEach(item => {
+                const harga = parseInt(item.harga.replace(/[^\d]/g, '')) * (item.jumlah || 1);
+                subtotal += harga;
+
+                const div = document.createElement('div');
+                div.className = 'produk';
+                div.innerHTML = `
+                    <span><strong>${item.nama}</strong></span>
+                    <span>${formatRupiah(harga)}</span>
+                `;
+                daftar.appendChild(div);
+            });
+
+            let ongkir = Math.floor(subtotal / 100000 * 5000) + 15000;
+            if (ongkir > 40000) ongkir = 40000;
+
+            const total = subtotal + ongkir;
+
+            document.getElementById('subtotal').textContent = formatRupiah(subtotal);
+            document.getElementById('ongkir').textContent = formatRupiah(ongkir);
+            document.getElementById('total').textContent = formatRupiah(total);
+
+            localStorage.setItem('checkout_total', total);
+        });
+
+        function bayarSekarang() {
+            alert("Transaksi berhasil! Terima kasih telah berbelanja di HiTekno.");
+            localStorage.removeItem('keranjang');
+            localStorage.removeItem('checkout');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+<script>
+function updateKeranjangCount() {
+    const data = JSON.parse(localStorage.getItem('keranjang')) || [];
+    const count = data.reduce((acc, item) => acc + (item.jumlah || 1), 0);
+    const badge = document.getElementById('keranjang-count');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+    }
+}
+document.addEventListener('DOMContentLoaded', updateKeranjangCount);
+</script>
+
+</body>
+</html>

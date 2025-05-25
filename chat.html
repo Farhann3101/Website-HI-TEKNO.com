@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chat Customer Service - HiTekno Store</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* Styling khusus untuk halaman chat */
+        .hero {
+            background-color: #3498db; /* samakan dengan hero di style.css */
+            color: white;
+            text-align: center;
+            padding: 2em 1em;
+        }
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 20px auto 40px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #2c3e50; /* warna navbar */
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            height: 400px;
+            background-color: #fafafa;
+        }
+        .message {
+            margin-bottom: 15px;
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            clear: both;
+            word-wrap: break-word;
+        }
+        .message.user {
+            background-color: #2c3e50; /* warna navbar */
+            color: white;
+            float: right;
+            border-bottom-right-radius: 0;
+        }
+        .message.cs {
+            background-color: #e0e0e0;
+            color: #333;
+            float: left;
+            border-bottom-left-radius: 0;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+        .chat-input textarea {
+            flex: 1;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+        }
+        .chat-input button {
+            background-color: #2c3e50; /* warna navbar */
+            border: none;
+            color: white;
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .chat-input button:hover {
+            background-color: #1a2733; /* warna navbar lebih gelap */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">HiTekno</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="kategori.html">Kategori</a>
+            <a href="keranjang.html">Keranjang <span id="keranjang-count" style="background:red; color:white; padding:2px 8px; border-radius:50%; font-size:0.8em;">0</span></a>
+            <a href="chat.html">Chat</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Chat dengan Customer Service</h1>
+        <p>Kami akan segera membantu Anda.</p>
+    </section>
+
+    <div class="chat-container">
+        <div class="chat-header">HiTekno Customer Service</div>
+        <div id="chatMessages" class="chat-messages">
+            <div class="message cs">Halo! Ada yang bisa kami bantu?</div>
+        </div>
+        <form id="chatForm" class="chat-input" onsubmit="return sendMessage(event)">
+            <textarea id="messageInput" rows="2" placeholder="Ketik pesan Anda..." required></textarea>
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 HiTekno. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function sendMessage(event) {
+            event.preventDefault();
+            const input = document.getElementById('messageInput');
+            const messageText = input.value.trim();
+            if (messageText === '') return;
+
+            const chatMessages = document.getElementById('chatMessages');
+
+            // Buat elemen pesan user
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user');
+            userMessage.textContent = messageText;
+            chatMessages.appendChild(userMessage);
+
+            // Scroll ke bawah otomatis
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            input.value = '';
+
+            // Simulasi balasan dari CS dengan delay
+            setTimeout(() => {
+                const csReply = document.createElement('div');
+                csReply.classList.add('message', 'cs');
+                csReply.textContent = 'Terima kasih atas pesan Anda. Kami akan segera membalas.';
+                chatMessages.appendChild(csReply);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+
+            return false;
+        }
+    </script>
+
+<script>
+function updateKeranjangCount() {
+    const data = JSON.parse(localStorage.getItem('keranjang')) || [];
+    const count = data.reduce((acc, item) => acc + (item.jumlah || 1), 0);
+    const badge = document.getElementById('keranjang-count');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+    }
+}
+document.addEventListener('DOMContentLoaded', updateKeranjangCount);
+</script>
+
+</body>
+</html>
